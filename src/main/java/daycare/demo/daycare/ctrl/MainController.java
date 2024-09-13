@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import daycare.demo.daycare.domain.SignupRequestDTO;
+import daycare.demo.daycare.domain.UserRequestDTO;
+import daycare.demo.daycare.domain.UserResponseDTO;
 import daycare.demo.daycare.service.MainService;
 
 @RestController
@@ -24,7 +25,7 @@ public class MainController {
     private MainService mainService;
 
     @PostMapping("/signup")
-    public ResponseEntity<Void> signup(@RequestBody SignupRequestDTO params) {
+    public ResponseEntity<Void> signup(@RequestBody UserRequestDTO params) {
         System.out.println("client endpoint : /daydare/signup");
         System.out.println("params = " + params);
         mainService.signup(params);
@@ -44,4 +45,45 @@ public class MainController {
         return new ResponseEntity<>(idCheck, HttpStatus.OK);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> params) {
+        System.out.println("client endpoint : /login");
+        System.out.println("params = " + params);
+
+        Map<String, Object> response = new HashMap<>();
+        boolean login = mainService.login(params);
+
+        if (login) {
+            UserResponseDTO user = mainService.getUser(params.get("id"));
+
+            if (user != null) {
+                response.put("success", true);
+                response.put("uid", user.getUid());
+                response.put("name", user.getName());
+            } else {
+                response.put("success", false);
+                response.put("message", "User not found.");
+            }
+        } else {
+            response.put("success", false);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+    /* 
+    @GetMapping("/user")
+    public ResponseEntity<UserResponseDTO> getUser(@PathVariable(name = "id") String id) {
+        System.out.println("client endpoint : /user/{id}");
+        System.out.println("params = " + id);
+
+        Map<String, String> map = new HashMap<>();
+        map.put("id", id);
+
+        UserResponseDTO user = mainService.getUserById(id);
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+     */
 }

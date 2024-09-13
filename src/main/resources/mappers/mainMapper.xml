@@ -4,7 +4,7 @@
 <mapper namespace="daycare.demo.daycare.dao.MainMapper">
 
     <insert id="signupInsertRow"
-            parameterType ="signupRequestDTO">
+            parameterType ="userRequestDTO">
         insert into USER(ID, PASSWORD, NAME, EMAIL, PHONE)
         values(#{id}, #{pwd}, #{name}, #{email}, #{phone})
     </insert>
@@ -13,6 +13,27 @@
             parameterType="map" 
             resultType="Integer">
         SELECT COUNT(*)
+        FROM USER
+        WHERE ID = #{id}
+    </select>
+
+    <select id="loginSelectRow" 
+            parameterType="map" 
+            resultType="Integer">
+        SELECT COUNT(*)
+        FROM USER
+        WHERE ID = #{id} AND PASSWORD = #{pwd}
+    </select>
+
+    <select id="userSelectRow" 
+            parameterType="String" 
+            resultType="userResponseDTO">
+        SELECT 
+        UID as uid,
+        ID as id,
+        NAME as name,
+        EMAIL as email,
+        PHONE as phone
         FROM USER
         WHERE ID = #{id}
     </select>

@@ -3,7 +3,7 @@ package daycare.demo.daycare.domain;
 import lombok.Data;
 
 @Data
-public class SignupRequestDTO {
+public class UserRequestDTO {
 
     private String id;
     private String pwd;
