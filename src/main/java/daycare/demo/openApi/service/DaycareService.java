@@ -17,24 +17,26 @@ public class DaycareService {
     private final String API_URL = "http://openapi.seoul.go.kr:8088/5a696a4a6b74776f33377172777252/json/ChildCareInfo/1/1000/";
 
     public List<DaycareItemDTO> searchDaycares(String sigun, String type, String name) {
-        // OpenAPI 호출 URL 생성
+
         String url = UriComponentsBuilder.fromHttpUrl(API_URL).toUriString();
 
-        // API 호출 및 응답 데이터 파싱
         DaycareItems response = restTemplate.getForObject(url, DaycareItems.class);
 
         if (response != null && response.getChildCareInfo() != null) {
-            // 데이터의 name만 출력
-            response.getChildCareInfo().getRow().forEach(item -> System.out.println(item.getCrName()));
+
+            List<DaycareItemDTO> filteredList = response.getChildCareInfo().getRow().stream()
+                    .filter(item -> item.getSigunName().contains(sigun))
+                    .filter(item -> item.getCrTypeName().contains(type))
+                    .filter(item -> item.getCrName().contains(name))
+                    .collect(Collectors.toList());
+
+            // 필터링된 데이터를 출력
+            filteredList.forEach(item -> System.out.println(item.getCrName()));
+
+            return filteredList;
         } else {
             System.out.println("No data received from API.");
+            return List.of(); // 빈 리스트 반환
         }
-
-        // 검색 조건에 맞게 데이터 필터링
-        return response.getChildCareInfo().getRow().stream()
-                .filter(item -> item.getSigunName().contains(sigun))
-                .filter(item -> item.getCrTypeName().contains(type))
-                .filter(item -> item.getCrName().contains(name))
-                .collect(Collectors.toList());
     }
 }
