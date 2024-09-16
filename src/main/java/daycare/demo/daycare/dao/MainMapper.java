@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 
 import daycare.demo.daycare.domain.UserRequestDTO;
 import daycare.demo.daycare.domain.UserResponseDTO;
+import daycare.demo.daycare.domain.ReviewRequestDTO;
+import daycare.demo.daycare.domain.ReviewResponseDTO;
 
 @Mapper
 public interface MainMapper {
@@ -18,4 +20,8 @@ public interface MainMapper {
     public Integer loginSelectRow(Map<String, String> map);
 
     public UserResponseDTO userSelectRow(String id);
+
+    public void reviewInsertRow(ReviewRequestDTO params);
+
+    public List<ReviewResponseDTO> reviewSelectRow(String daycareId);
 }

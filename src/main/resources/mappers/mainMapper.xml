@@ -38,5 +38,20 @@
         WHERE ID = #{id}
     </select>
 
+    <insert id="reviewInsertRow"
+            parameterType ="reviewRequestDTO">
+        insert into DAYCARE_REVIEW(DAYCARE_ID, RATING, DATE, CONTENT, UID)
+        values(#{daycareId}, #{rating}, #{date}, #{content}, #{uid})
+    </insert>
+
+    <select id="reviewSelectRow" 
+            parameterType="String" 
+            resultType="reviewResponseDTO">
+        SELECT 
+        REVIEW_ID, RATING, DATE, CONTENT, UID
+        FROM DAYCARE_REVIEW
+        WHERE DAYCARE_ID = #{daycareId}
+    </select>
+
 
 </mapper>

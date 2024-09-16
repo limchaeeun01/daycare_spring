@@ -7,5 +7,7 @@
 
         <typeAlias  alias="userRequestDTO" type="daycare.demo.daycare.domain.UserRequestDTO"/>
         <typeAlias  alias="userResponseDTO" type="daycare.demo.daycare.domain.UserResponseDTO"/>
+        <typeAlias  alias="reviewRequestDTO" type="daycare.demo.daycare.domain.ReviewRequestDTO"/>
+        <typeAlias  alias="reviewResponseDTO" type="daycare.demo.daycare.domain.ReviewResponseDTO"/>
     </typeAliases>
 </configuration>

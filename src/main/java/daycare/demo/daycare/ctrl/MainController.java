@@ -2,6 +2,7 @@ package daycare.demo.daycare.ctrl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import daycare.demo.daycare.domain.UserRequestDTO;
 import daycare.demo.daycare.domain.UserResponseDTO;
 import daycare.demo.daycare.service.MainService;
+import daycare.demo.daycare.domain.ReviewRequestDTO;
+import daycare.demo.daycare.domain.ReviewResponseDTO;
 
 @RestController
 @RequestMapping("/daycare")
@@ -71,6 +74,23 @@ public class MainController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PostMapping("/review")
+    public ResponseEntity<Void> postReview(@RequestBody ReviewRequestDTO params) {
+        System.out.println("client endpoint : /review");
+        System.out.println("params = " + params);
+        mainService.postReview(params);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/review/{daycareId}")
+    public ResponseEntity<List<ReviewResponseDTO>> getReview(@PathVariable(name = "daycareId") String daycareId) {
+        System.out.println("client endpoint : /daycare/review/{daycareId}");
+        System.out.println("params = " + daycareId);
+
+        List<ReviewResponseDTO> response = mainService.getReview(daycareId);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
     /* 
     @GetMapping("/user")
