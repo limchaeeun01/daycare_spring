@@ -38,6 +38,19 @@
         WHERE ID = #{id}
     </select>
 
+    <select id="userSelectRow_2" 
+            parameterType="Integer" 
+            resultType="userResponseDTO">
+        SELECT 
+        UID as uid,
+        ID as id,
+        NAME as name,
+        EMAIL as email,
+        PHONE as phone
+        FROM USER
+        WHERE UID = #{uid}
+    </select>
+
     <insert id="reviewInsertRow"
             parameterType ="reviewRequestDTO">
         insert into DAYCARE_REVIEW(DAYCARE_ID, RATING, DATE, CONTENT, UID)
@@ -45,13 +58,84 @@
     </insert>
 
     <select id="reviewSelectRow" 
-            parameterType="String" 
-            resultType="reviewResponseDTO">
+        parameterType="String" 
+        resultType="reviewResponseDTO">
         SELECT 
-        REVIEW_ID, RATING, DATE, CONTENT, UID
-        FROM DAYCARE_REVIEW
-        WHERE DAYCARE_ID = #{daycareId}
+            REVIEW_ID, RATING, DATE, CONTENT, UID
+        FROM 
+            DAYCARE_REVIEW
+        WHERE 
+            DAYCARE_ID = #{daycareId}
+        ORDER BY 
+            REVIEW_ID DESC
     </select>
 
+    <select id="likeSelectRow" 
+            parameterType="map" 
+            resultType="Integer">
+        SELECT COUNT(*)
+        FROM DAYCARE_LIKE
+        WHERE DAYCARE_ID = #{daycareId} AND UID = #{uid}
+    </select>
+
+    <select id="likeDaycareSelectRow" 
+            parameterType="Integer" 
+            resultType="likeResponseDTO">
+        SELECT 
+            DAYCARE_ID as daycareId,
+            UID as uid
+        FROM DAYCARE_LIKE
+        WHERE UID = #{uid}
+    </select>
+
+    <insert id="likeInsertRow"
+            parameterType ="map">
+        insert into DAYCARE_LIKE(DAYCARE_ID, UID)
+        values(#{daycareId}, #{uid})
+    </insert>
+
+    <delete id="likeDeleteRow"
+            parameterType ="map">
+        DELETE FROM DAYCARE_LIKE
+        WHERE UID = #{uid} AND DAYCARE_ID = #{daycareId};
+    </delete>
+
+    <insert id="postInsertRow"
+            parameterType ="postRequestDTO">
+        insert into POST(UID, TITLE, CONTENT, DATE)
+        values(#{uid}, #{title}, #{content}, #{date})
+    </insert>
+
+    <select id="postSelectRow" 
+            resultType="postResponseDTO">
+        SELECT 
+            POST_ID as postId,
+            UID as uid,
+            TITLE as title,
+            CONTENT as content,
+            DATE as date
+        FROM POST
+    </select>
+
+    <select id="commentSelectRow" 
+            parameterType ="Integer"
+            resultType="commentResponseDTO">
+        SELECT 
+            COMMENT_ID as commentId,
+            POST_ID as postId,
+            UID as uid,
+            CONTENT as content,
+            DATE as date
+        FROM COMMENT
+        WHERE POST_ID = #{postId}
+        ORDER BY 
+            POST_ID DESC
+    </select>
+
+    <insert id="commentInsertRow"
+            parameterType ="commentRequestDTO">
+        insert into COMMENT(POST_ID, CONTENT, UID, DATE)
+        values(#{postId}, #{content}, #{uid}, #{date})
+    </insert>
 
 </mapper>

@@ -7,11 +7,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import daycare.demo.daycare.domain.UserRequestDTO;
@@ -19,6 +21,11 @@ import daycare.demo.daycare.domain.UserResponseDTO;
 import daycare.demo.daycare.service.MainService;
 import daycare.demo.daycare.domain.ReviewRequestDTO;
 import daycare.demo.daycare.domain.ReviewResponseDTO;
+import daycare.demo.daycare.domain.PostRequestDTO;
+import daycare.demo.daycare.domain.PostResponseDTO;
+import daycare.demo.daycare.domain.CommentRequestDTO;
+import daycare.demo.daycare.domain.CommentResponseDTO;
+import daycare.demo.daycare.domain.LikeResponseDTO;
 
 @RestController
 @RequestMapping("/daycare")
@@ -74,6 +81,16 @@ public class MainController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/user/{uid}")
+    public ResponseEntity<UserResponseDTO> getUser(@PathVariable(name = "uid") Integer uid) {
+        System.out.println("client endpoint : /user/{uid}");
+        System.out.println("params = " + uid);
+
+        UserResponseDTO response = mainService.getUser(uid);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @PostMapping("/review")
     public ResponseEntity<Void> postReview(@RequestBody ReviewRequestDTO params) {
         System.out.println("client endpoint : /review");
@@ -92,18 +109,95 @@ public class MainController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    /* 
-    @GetMapping("/user")
-    public ResponseEntity<UserResponseDTO> getUser(@PathVariable(name = "id") String id) {
-        System.out.println("client endpoint : /user/{id}");
-        System.out.println("params = " + id);
+    @GetMapping("/like")
+    public ResponseEntity<Boolean> getLike(@RequestParam Integer uid, @RequestParam String daycareId) {
+        System.out.println("client endpoint : /like");
+        System.out.println("uid = " + uid);
+        System.out.println("daycareId = " + daycareId);
 
-        Map<String, String> map = new HashMap<>();
-        map.put("id", id);
+        Map<String, Object> params = new HashMap<>();
+        params.put("uid", uid);
+        params.put("daycareId", daycareId);
 
-        UserResponseDTO user = mainService.getUserById(id);
+        Boolean response = mainService.getLike(params);
 
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
-     */
+
+    @GetMapping("/likeDaycare/{uid}")
+    public ResponseEntity<List<LikeResponseDTO>> getLikeDaycare(@PathVariable(name = "uid") Integer uid) {
+        System.out.println("client endpoint : /likeDaycare/{uid}");
+        System.out.println("uid = " + uid);
+
+        List<LikeResponseDTO> response = mainService.getLikeDaycare(uid);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/like/add")
+    public ResponseEntity<Void> addLike(@RequestParam Integer uid, @RequestParam String daycareId) {
+        System.out.println("client endpoint : /like/add");
+        System.out.println("uid = " + uid);
+        System.out.println("daycareId = " + daycareId);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("uid", uid);
+        params.put("daycareId", daycareId);
+
+        mainService.addLike(params);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/like/delete")
+    public ResponseEntity<Void> deleteLike(@RequestParam Integer uid, @RequestParam String daycareId) {
+        System.out.println("client endpoint : /like/delete");
+        System.out.println("uid = " + uid);
+        System.out.println("daycareId = " + daycareId);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("uid", uid);
+        params.put("daycareId", daycareId);
+
+        mainService.deleteLike(params);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/post/add")
+    public ResponseEntity<Void> addPost(@RequestBody PostRequestDTO params) {
+        System.out.println("client endpoint : /post/add");
+        System.out.println("params = " + params);
+
+        mainService.addPost(params);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/post")
+    public ResponseEntity<List<PostResponseDTO>> getPost() {
+        System.out.println("client endpoint : /daycare/post");
+
+        List<PostResponseDTO> response = mainService.getPost();
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/comment/{postId}")
+    public ResponseEntity<List<CommentResponseDTO>> getComment(@PathVariable(name = "postId") Integer postId) {
+        System.out.println("client endpoint : /comment/{id}");
+
+        List<CommentResponseDTO> response = mainService.getComment(postId);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/comment/add")
+    public ResponseEntity<Void> addComment(@RequestBody CommentRequestDTO params) {
+        System.out.println("client endpoint : /comment/add");
+        System.out.println("params = " + params);
+
+        mainService.addComment(params);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }
