@@ -11,6 +11,7 @@ public class PostRequestDTO {
     private Integer uid;
     private String title;
     private String content;
+    private Integer postId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime date;

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -180,6 +181,24 @@ public class MainController {
         List<PostResponseDTO> response = mainService.getPost();
 
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/post/delete/{postId}")
+    public ResponseEntity<Void> deletePost(@PathVariable(name = "postId") Integer postId) {
+        System.out.println("client endpoint : /post/delete/{postId}");
+
+        mainService.deletePost(postId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/post/update")
+    public ResponseEntity<Void> updatePost(@RequestBody PostRequestDTO params) {
+        System.out.println("client endpoint : /post/update/{postId}");
+
+        mainService.updatePost(params);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/comment/{postId}")

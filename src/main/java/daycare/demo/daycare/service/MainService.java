@@ -90,10 +90,20 @@ public class MainService {
         mainMapper.postInsertRow(params);
     }
 
+    public void deletePost(Integer postId) {
+        System.out.println("debug >>> service deletePost " + mainMapper);
+        mainMapper.postDeleteRow(postId);
+    }
+
     public List<PostResponseDTO> getPost() {
         System.out.println("debug >>> service getPost " + mainMapper);
         List<PostResponseDTO> result = mainMapper.postSelectRow();
         return result;
+    }
+
+    public void updatePost(PostRequestDTO params) {
+        System.out.println("debug >>> service updatePost " + mainMapper);
+        mainMapper.postUpdateRow(params);
     }
 
     public List<CommentResponseDTO> getComment(Integer postId) {

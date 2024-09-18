@@ -40,7 +40,11 @@ public interface MainMapper {
 
     public void postInsertRow(PostRequestDTO params);
 
+    public void postDeleteRow(Integer postId);
+
     public List<PostResponseDTO> postSelectRow();
+
+    public void postUpdateRow(PostRequestDTO params);
 
     public List<CommentResponseDTO> commentSelectRow(Integer postId);
 
